@@ -1,0 +1,14 @@
+{
+  "name": "twitterwebhook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "form-data": "^4.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "port": 45558,
+    "WebHook": "Discord",
+    "bearer_token": "Twitter",
+    "cooldown": 2000
+}
