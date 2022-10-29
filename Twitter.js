@@ -12,7 +12,7 @@ const Twitter_TOKEN = {
 function getDatas(id) {
     let data = [];
     return new Promise((resolve) => {
-        https.get(`https://api.twitter.com/2/tweets/${id}?tweet.fields=attachments,entities&expansions=attachments.media_keys&media.fields=variants,url`, Twitter_TOKEN, (res) => {
+        https.get(`https://api.twitter.com/2/tweets/${id}?tweet.fields=attachments,entities&expansions=attachments.media_keys,author_id&media.fields=variants,url&user.fields=profile_image_url`, Twitter_TOKEN, (res) => {
             res.on('data', (chunk) => {
                 data.push(chunk);
             }).on('end', () => {

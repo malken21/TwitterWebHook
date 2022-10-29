@@ -1,15 +1,13 @@
 const { port, cooldown } = require("./Config.json");
 
 const { getDatas } = require("./Twitter");
-const { sendText, sendMedia } = require("./discord");
+const { sendMedia } = require("./discord");
 
 const url = require("url");
 
 const http = require('http');
 
 const list = [];
-const urls = [];
-
 
 const server = http.createServer(async (req, res) => {
     try {
@@ -27,15 +25,14 @@ const server = http.createServer(async (req, res) => {
                         const id = URLdata.pathname.split("/status/")[1];
 
 
-                        if (list.length == 0) {
+                        if (isStart) {
                             list.push(id);
-                            urls.push(json.url);
+                        } else {
+                            isStart = true;
+                            list.push(id);
                             await delay(cooldown);
                             console.log("start")
                             start();
-                        } else {
-                            list.push(id);
-                            urls.push(json.url);
                         }
                     } catch (err) {
                         console.log(err);
@@ -56,36 +53,31 @@ server.listen(port, () => {
     console.log(`start port: ${port}`);
 });
 
-
+let isStart = false;
 
 async function start() {
-    if (list.length == 0) return;
+    if (list.length == 0) { isStart = false; return; }
     try {
         const id = list.shift();
-        const URL = urls.shift();
         const Twitter = await getDatas(id);
 
         console.log(JSON.stringify(Twitter));
 
-        if (!Twitter.includes) return;
-
-        let isSend = false;
+        if (!Twitter.includes) { isStart = false; return; }
 
         for (const media of Twitter.includes.media) {
             if (media.type == "video") {
                 for (const variant of media.variants) {
                     if (variant.bit_rate) {
 
-                        await send(variant, URL, isSend)
-                        isSend = true;
+                        await send(Twitter.includes.users[0], variant);
 
                         break;
                     }
                 }
             } else if (media.type == "photo") {
 
-                await send(media, URL, isSend)
-                isSend = true;
+                await send(Twitter.includes.users[0], media);
             }
         }
 
@@ -103,14 +95,10 @@ function delay(ms) {//-----待機-----//
     });
 }
 
-function send(media, URL, isSend) {
+function send(user, media) {
     return new Promise(async (resolve) => {
-        if (!isSend) {
-            // await sendText({ "content": "`" + URL + "`" });
-            // await delay(cooldown);
-        }
         console.log(media.url)
-        await sendMedia(media.url);
+        await sendMedia({ username: user.name, avatar_url: user.profile_image_url }, media);
         await delay(cooldown);
         resolve(true);
     });
