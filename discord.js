@@ -19,8 +19,8 @@ function sendMedia(obj, media) {
 
         form.submit(WebHook, function (err, res) {
             console.log(res.statusCode);
+            resolve(true);
         });
-        resolve(true);
     });
 }
 

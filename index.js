@@ -30,8 +30,7 @@ const server = http.createServer(async (req, res) => {
                         } else {
                             isStart = true;
                             list.push(id);
-                            await delay(cooldown);
-                            console.log("start")
+                            console.log("start");
                             start();
                         }
                     } catch (err) {
@@ -57,13 +56,14 @@ let isStart = false;
 
 async function start() {
     if (list.length == 0) { isStart = false; return; }
+    await delay(cooldown);
     try {
         const id = list.shift();
         const Twitter = await getDatas(id);
 
-        console.log(JSON.stringify(Twitter));
+        console.log("\n" + Twitter.data.text);
 
-        if (!Twitter.includes) {
+        if (!Twitter.includes.media) {
             start(); return;
         }
 
@@ -86,7 +86,6 @@ async function start() {
     } catch (err) {
         console.log(err);
     }
-    await delay(cooldown);
     start();
 }
 
@@ -101,7 +100,6 @@ function send(user, media) {
     return new Promise(async (resolve) => {
         console.log(media.url)
         await sendMedia({ username: user.name, avatar_url: user.profile_image_url }, media);
-        await delay(cooldown);
         resolve(true);
     });
 }
