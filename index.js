@@ -63,7 +63,9 @@ async function start() {
 
         console.log(JSON.stringify(Twitter));
 
-        if (!Twitter.includes) { isStart = false; return; }
+        if (!Twitter.includes) {
+            start(); return;
+        }
 
         for (const media of Twitter.includes.media) {
             if (media.type == "video") {
