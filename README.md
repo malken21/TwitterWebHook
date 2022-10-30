@@ -1,4 +1,4 @@
-# Discord_sendTwiitMedia_WebHook
+# Discord_sendTweetMedia_WebHook
 `http://localhost:45558/` に POSTで
 ```
 {"url":"Twitter Tweet URL"}
